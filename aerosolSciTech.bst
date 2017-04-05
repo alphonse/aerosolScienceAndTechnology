@@ -1,10 +1,10 @@
 %%
-%% This is file `aerosolSciTech.bst',
+%% This is file `aersolSciTech.bst',
 %% generated with the docstrip utility.
 %%
 %% The original source files were:
 %%
-%% merlin.mbs  (with options: `ay,cay,nm-rev,jnrlst,mcite,mct-2,mct-x2,keyxyr,dt-beg,yr-par,yrpp-xsp,note-yr,vnum-x,jwdpg,num-xser,isbn,issn,url-doi,pp,ed,xedn,jabr,url,url-blk,nfss,')
+%% merlin.mbs  (with options: `ay,cay,nm-rev,jnrlst,keyxyr,dt-beg,yr-par,note-yr,vnum-x,num-xser,isbn,issn,url-doi,pp,ed,xedn,jabr,etal-xc,url,url-blk,nfss,')
 %% ----------------------------------------
 %% *** Aerosol Science and Technology ***
 %% 
@@ -131,10 +131,6 @@ FUNCTION {add.blank}
 {  " " * before.all 'output.state :=
 }
 
-FUNCTION {no.blank.or.punct}
-{  "\hspace{0pt}" * before.all 'output.state :=
-}
-
 FUNCTION {date.block}
 {
   new.block
@@ -178,7 +174,7 @@ FUNCTION {emphasize}
 FUNCTION {tie.or.space.prefix}
 { duplicate$ text.length$ #3 <
     { "~" }
-    { "" }
+    { " " }
   if$
   swap$
 }
@@ -195,7 +191,7 @@ FUNCTION {bbl.and}
 { "and"}
 
 FUNCTION {bbl.etal}
-{ "et~al." }
+{ "et~al" }
 
 FUNCTION {bbl.editors}
 { "eds." }
@@ -226,9 +222,6 @@ FUNCTION {bbl.in}
 
 FUNCTION {bbl.pages}
 { "pp." }
-
-FUNCTION {bbl.pages.journal}
-{ "" }
 
 FUNCTION {bbl.page}
 { "p." }
@@ -387,6 +380,7 @@ FUNCTION {format.names}
                 { pop$ }
               if$
               numnames #2 >
+              t "others" = not and
                 { "," * }
                 'skip$
               if$
@@ -435,6 +429,7 @@ FUNCTION {format.names.ed}
                 { pop$ }
               if$
               numnames #2 >
+              t "others" = not and
                 { "," * }
                 'skip$
               if$
@@ -787,13 +782,7 @@ FUNCTION {format.journal.pages}
           ":" *
           swap$
           n.dashify
-          pages multi.page.check
-            'bbl.pages.journal
-            'bbl.pages.journal
-          if$
-          swap$ tie.or.space.prefix
           "pages" bibinfo.check
-          * *
           *
         }
       if$
@@ -1266,52 +1255,27 @@ FUNCTION {chop.word}
   if$
 }
 FUNCTION {format.lab.names}
-{'s :=
- "" 't :=
-  #1 'nameptr :=
-  s num.names$ 'numnames :=
-  numnames 'namesleft :=
-    { namesleft #0 > }
-    { s nameptr
-      "{vv~}{ll}" format.name$
-      't :=
-      nameptr #1 >
-        {
-          nameptr #3 =
-          numnames #2 > and
-            { "others" 't :=
-              #1 'namesleft := }
-            'skip$
-          if$
-          namesleft #1 >
-            { ", " * t * }
+{ 's :=
+  "" 't :=
+  s #1 "{vv~}{ll}" format.name$
+  s num.names$ duplicate$
+  #2 >
+    { pop$
+      " " * bbl.etal *
+    }
+    { #2 <
+        'skip$
+        { s #2 "{ff }{vv }{ll}{ jj}" format.name$ "others" =
             {
-              s nameptr "{ll}" format.name$ duplicate$ "others" =
-                { 't := }
-                { pop$ }
-              if$
-              t "others" =
-                {
-                  " " * bbl.etal *
-                }
-                {
-                  numnames #2 >
-                    { "," * }
-                    'skip$
-                  if$
-                  bbl.and
-                  space.word * t *
-                }
-              if$
+              " " * bbl.etal *
             }
+            { bbl.and space.word * s #2 "{vv~}{ll}" format.name$
+              * }
           if$
         }
-        't
       if$
-      nameptr #1 + 'nameptr :=
-      namesleft #1 - 'namesleft :=
     }
-  while$
+  if$
 }
 
 FUNCTION {author.key.label}
@@ -1580,4 +1544,4 @@ FUNCTION {end.bib}
 EXECUTE {end.bib}
 %% End of customized bst file
 %%
-%% End of file `aerosolSciTech.bst'.
+%% End of file `aersolSciTech.bst'.
